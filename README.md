@@ -82,3 +82,4 @@ Thanks to all the people who contribute.
 # License
 
 Trust Wallet Core is available under the MIT license. See the [LICENSE](LICENSE) file for more info.
+# wallet-core-westend
