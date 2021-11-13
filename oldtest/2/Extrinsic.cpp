@@ -9,7 +9,7 @@
 #include <map>
 
 using namespace TW;
-using namespace TW::Polkadot;
+using namespace TW::Westend;
 
 static constexpr uint8_t signedBit = 0x80;
 static constexpr uint8_t sigTypeEd25519 = 0x00;

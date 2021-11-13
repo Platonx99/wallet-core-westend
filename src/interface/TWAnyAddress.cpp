@@ -14,6 +14,7 @@
 #include "../Cosmos/Address.h"
 #include "../Decred/Address.h"
 #include "../Kusama/Address.h"
+#include "../Westend/Address.h"
 #include "../Polkadot/Address.h"
 #include "../Zcash/TAddress.h"
 #include "../Zilliqa/Address.h"
@@ -168,6 +169,13 @@ TWData* _Nonnull TWAnyAddressData(struct TWAnyAddress* _Nonnull address) {
 
     case TWCoinTypeKusama: {
         auto addr = Kusama::Address(string);
+        data = Data(addr.bytes.begin() + 1, addr.bytes.end());
+        break;
+    }
+
+
+    case TWCoinTypeWestend: {
+        auto addr = Westend::Address(string);
         data = Data(addr.bytes.begin() + 1, addr.bytes.end());
         break;
     }

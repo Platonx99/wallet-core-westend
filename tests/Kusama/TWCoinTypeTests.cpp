@@ -26,7 +26,7 @@ TEST(TWKusamaCoinType, TWCoinType) {
     ASSERT_EQ(TWBlockchainPolkadot, TWCoinTypeBlockchain(TWCoinTypeKusama));
     ASSERT_EQ(0x0, TWCoinTypeP2shPrefix(TWCoinTypeKusama));
     ASSERT_EQ(0x0, TWCoinTypeStaticPrefix(TWCoinTypeKusama));
-    assertStringsEqual(symbol, "KSM");
+    assertStringsEqual(symbol, "KSW");
     assertStringsEqual(txUrl, "https://kusama.subscan.io/extrinsic/0xcbe0c2e2851c1245bedaae4d52f06eaa6b4784b786bea2f0bff11af7715973dd");
     assertStringsEqual(accUrl, "https://kusama.subscan.io/account/DbCNECPna3k6MXFWWNZa5jGsuWycqEE6zcUxZYkxhVofrFk");
     assertStringsEqual(id, "kusama");

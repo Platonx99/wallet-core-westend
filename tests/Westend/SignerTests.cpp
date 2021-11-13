@@ -21,19 +21,21 @@
 namespace TW::Polkadot {
     extern PrivateKey privateKey;
     extern PublicKey toPublicKey;
-    auto genesisHashKSM = parse_hex("b0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe");
+    auto genesisHashWND = parse_hex("e143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423e");
 
-TEST(PolkadotSigner, SignTransferKSM) {
-    auto blockHash = parse_hex("4955dd4813f3e91ef3fd5a825b928af2fc50a71380085f753ccef00bb1582891");
-    auto toAddress = SS58Address(toPublicKey, TWSS58AddressTypeKusama);
+
+TEST(PolkadotSigner, SignTransferWND) {
+
+    auto blockHash = parse_hex("be7df163a6a24c3a48454da350bba58102aaa9a86f64adc7baff020571e80754");
+    auto toAddress = SS58Address(toPublicKey, TWSS58AddressTypeWestend);
 
     auto input = Proto::SigningInput();
     input.set_block_hash(blockHash.data(), blockHash.size());
-    input.set_genesis_hash(genesisHashKSM.data(), genesisHashKSM.size());
+    input.set_genesis_hash(genesisHashWND.data(), genesisHashWND.size());
     input.set_nonce(0);
     input.set_spec_version(2019);
     input.set_private_key(privateKey.bytes.data(), privateKey.bytes.size());
-    input.set_network(Proto::Network::KUSAMA);
+    input.set_network(Proto::Network::WESTEND);
     input.set_transaction_version(2);
 
     auto balanceCall = input.mutable_balance_call();
@@ -47,8 +49,18 @@ TEST(PolkadotSigner, SignTransferKSM) {
     auto output = Signer::sign(input);
 
 
-    ASSERT_EQ(hex(preimage), "04008eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48e5c0000000e307000002000000b0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe4955dd4813f3e91ef3fd5a825b928af2fc50a71380085f753ccef00bb1582891");
-    ASSERT_EQ(hex(output.encoded()), "25028488dc3417d5058ec4b4503e0c12ea1a0a89be200fe98922423d4334014fa6b0ee000765cfa76cfe19499f4f19ef7dc4527652ec5b2e6b5ecfaf68725dafd48ae2694ad52e61f44152a544784e847de10ddb2c56bee4406574dcbcfdb5e5d35b6d0300000004008eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48e5c0");
+  std::string s;
+//   char hexString[4*sizeof(int)+1];
+  // returns decimal value of hex
+  //sprintf(hexString,"%i", 
+  s= hex(preimage).c_str();
+  //s = hexString;
+  myfile.open ("/tmp/example.txt");
+  myfile << "Test:\n" << s << "\n" << hex(output.encoded()).c_str();
+  myfile.close();
+  
+ASSERT_EQ(hex(preimage), "04008eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48e5c0000000e307000002000000e143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423ebe7df163a6a24c3a48454da350bba58102aaa9a86f64adc7baff020571e80754");
+ASSERT_EQ(hex(output.encoded()), "25028488dc3417d5058ec4b4503e0c12ea1a0a89be200fe98922423d4334014fa6b0ee00c35d5b0586ea8de454a1bcdd65c7ce8f82c4e4530c5c2b6fd68a9b46b8632ffbcb4cd27e8f1f92539d3238662a94683bef87bf9f26feaccd8583805591e1170400000004008eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48e5c0");
 }
 
 } // namespace

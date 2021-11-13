@@ -40,7 +40,8 @@ int main() {
 
         // Alternative: Import wallet with existing recovery phrase (mnemonic)
         cout << "Importing an HD wallet from earlier ... ";
-        auto secretMnemonic = TWStringCreateWithUTF8Bytes("ripple scissors kick mammal hire column oak again sun offer wealth tomorrow wagon turn fatal");
+        //auto secretMnemonic = TWStringCreateWithUTF8Bytes("ripple scissors kick mammal hire column oak again sun offer wealth tomorrow wagon turn fatal");
+         auto secretMnemonic = TWStringCreateWithUTF8Bytes("busy elegant correct limit rabbit mushroom shoot success cloth company flock control");
         walletImp = TWHDWalletCreateWithMnemonic(secretMnemonic, TWStringCreateWithUTF8Bytes(""));
         TWStringDelete(secretMnemonic);
         cout << "done." << endl;
@@ -51,7 +52,7 @@ int main() {
 
     {
         // coin type: we use Ethereum
-        const TWCoinType coinType = TWCoinType::TWCoinTypeEthereum; // TWCoinTypeBitcoin, TWCoinTypeEthereum
+        const TWCoinType coinType = TWCoinType::TWCoinTypeKusama; // TWCoinTypeBitcoin, TWCoinTypeEthereum
         cout << "Working with coin: " <<
             TWStringUTF8Bytes(TWCoinTypeConfigurationGetName(coinType)) << " " <<
             TWStringUTF8Bytes(TWCoinTypeConfigurationGetSymbol(coinType)) << endl;
@@ -67,11 +68,13 @@ int main() {
         // Note that private key is passed around between the two calls by the wallet -- be always cautious when handling secrets, avoid the risk of leaking secrets.
         cout << "Default derivation path:  " << TWStringUTF8Bytes(TWCoinTypeDerivationPath(coinType)) << endl;
         TWPrivateKey* secretPrivateKeyDefault = TWHDWalletGetKeyForCoin(walletImp, coinType);
-        string addressDefault = TWStringUTF8Bytes(TWCoinTypeDeriveAddress(coinType, secretPrivateKeyDefault));
+        cout << "SKEY: " << TWStringUTF8Bytes(secretPrivateKeyDefault) << endl; 
+        //string addressDefault = TWStringUTF8Bytes(TWCoinTypeDeriveAddress(coinType, secretPrivateKeyDefault));
+        string addressDefault = TWStringUTF8Bytes(TWCoinTypeDeriveAddress(coinType, "zzzzz"));
         cout << "Address from default key: '" << addressDefault << "'" << endl;
 
         // Alternative: Derive address using custom derivation path.  Done in 2 steps: derive private key, then address.
-        auto customDerivationPath = TWStringCreateWithUTF8Bytes("m/44'/60'/1'/0/0");
+        auto customDerivationPath = TWStringCreateWithUTF8Bytes("m/44'/434'/1'/0/0");
         TWPrivateKey* secretPrivateKeyCustom = TWHDWalletGetKey(walletImp, coinType, customDerivationPath);
         TWStringDelete(customDerivationPath);
         string addressCustom = TWStringUTF8Bytes(TWCoinTypeDeriveAddress(coinType, secretPrivateKeyCustom));
@@ -88,11 +91,12 @@ int main() {
         // Note that Signer input and output are represented as protobuf binary messages, for which support is missing in C++.
         // Therefore some direct serialization/parsing is done in helper methods.
         cout << "SEND funds:" << endl;
-        const string dummyReceiverAddress = "0xC37054b3b48C3317082E7ba872d7753D13da4986";
+        const string dummyReceiverAddress = "CtwdfrhECFs3FpvCGoiE4hwRC4UsSiM8WL899HjRdQbfYZY";
         auto secretPrivKey = TWPrivateKeyData(secretPrivateKeyDefault);
-
+        cout << "Secret key: " << secretPrivKey << endl;
         cout << "preparing transaction (using AnySigner) ... ";
-        string chainIdB64 = "AQ==";        // base64(parse_hex("01"))
+        string chainIdB64 = "AbI=";        // base64(parse_hex("01"))
+        //string chainIdB64 =  base64(parse_hex("354"));
         string gasPriceB64 = "1pOkAA==";   // base64(parse_hex("d693a4")) decimal 3600000000
         string gasLimitB64 = "Ugg=";       // base64(parse_hex("5208")) decimal 21000
         string amountB64 = "A0i8paFgAA=="; // base64(parse_hex("0348bca5a160"))  924400000000000
@@ -107,7 +111,7 @@ int main() {
         cout << "signing transaction ... ";
 
         auto json = TWStringCreateWithUTF8Bytes(transaction.c_str());
-        auto result = TWAnySignerSignJSON(json, secretPrivKey, TWCoinTypeEthereum);
+        auto result = TWAnySignerSignJSON(json, secretPrivKey, TWCoinTypeKusama);
         auto signedTransaction = string(TWStringUTF8Bytes(result));
         cout << "done" << endl;
         cout << "Signed transaction data (to be broadcast to network):  (len " << signedTransaction.length() << ") '" << signedTransaction << "'" << endl;
